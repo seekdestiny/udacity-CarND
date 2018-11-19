@@ -1,0 +1,2 @@
+docker run -it --rm --entrypoint "/run.sh" -p 8888:8888 -v `pwd`:/src mycarnd
+docker run -it --rm -p 8888:8888 -v `pwd`:/src mycarnd bash
