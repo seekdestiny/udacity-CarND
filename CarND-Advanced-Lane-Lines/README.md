@@ -27,6 +27,7 @@ The purpose of the project is to detect and track road lanes in a traffic video.
 
 [image1]: ./output_images/undistortion.png "Undistorted"
 [image2]: ./output_images/image_undistort.png "ImageUndistorted"
+[image3]: ./output_images/distort_diff.png "DistortDiff"
 
 [Rubric](https://review.udacity.com/#!/rubrics/571/view)
 ---
@@ -44,9 +45,12 @@ I then used the output `obj_pts` and `img_pts` to compute the camera calibration
 
 #### 1. Provide an example of a distortion-corrected image.
 
-We apply the distortion correction to a test image, for example `test6.jpg`, again using the cv2.undistort function. This is in image undistortion part. The result is shown below.
+We apply the distortion correction to a test image, for example `test6.jpg`, again using the cv2.undistort function. This is in image undistortion part. The difference between original and undistorted image
+is displayed as well. The result is shown below.
 
 ![alt text][image2]
+
+![alt text][image3]
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
