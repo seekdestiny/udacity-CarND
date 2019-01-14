@@ -29,6 +29,8 @@ The purpose of the project is to detect and track road lanes in a traffic video.
 [image2]: ./output_images/image_undistort.png "ImageUndistorted"
 [image3]: ./output_images/distort_diff.png "DistortDiff"
 [image4]: ./output_images/binary_example.png "Binary Example"
+[image5]: ./output_images/persp_transform_original.png "Warp Original Example"
+[image6]: ./output_images/persp_transform_warped.png "Warp Example"
 
 [Rubric](https://review.udacity.com/#!/rubrics/571/view)
 ---
@@ -123,39 +125,70 @@ will make the process of lane fitting much easier.
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+One of the goals of the project is to compute the road curvature and
+vehicle position within the lane. In order to do that, we must obtain
+a **birds-eye view** of the image, which allows us to obtain real measurements,
+not affected by the perspective of the camera.
+
+This operation is called **perspective transformation**, and it is implemented
+in Perspective Transform part. We use the OpenCV functions
+`cv2.getPerspectiveTransform` and `cv2.warpPerspective` to this extent.
+
+First, we need to manually select 4 points in the source image. These points must
+lie on the same plane. We take the image `test_images/straight_lines1.jpg`
+for this purpose, since the road is straight.
+
+The chosen points can be seen in the red polygon shown in
+`persp_transform_original.png`:
+
+![alt text][image5]
+
+These 4 points are mapped into a rectangle,
+with parallel lines, as shown in `persp_transform_warped.png`:
+
+![alt text][image6]
+
+As can be seen, the road lines don't appear parallel in the original image
+due to the camera perspective, but after the perspective transform they do
+appear parallel, since we chose the 4 points carefully to do so. 
+
+The point correspondences are chosen as follows:
 
 ```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
+x1 = 195
+x2 = 1090
+y_horizon = 465
+src_pts_ = ((x1, img.shape[0]),
+            (x2, img.shape[0]),
+            (705, y_horizon),
+            (575, y_horizon))
+
+off = 100 # Horizontal offset to have more space and better estimate sharp curves
+dst_pts_ = ((x1 + off, img.shape[0]),
+            (x2 - off, img.shape[0]),
+            (x2 - off, 0),
+            (x1 + off, 0))  
 ```
 
-This resulted in the following source and destination points:
+which gives:
 
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+| src       |  dst      |
+|:---------:|:---------:|
+|195,  720  | 295, 720  |
+|1090, 720  | 990, 720  |
+|705, 465   | 990, 0    |
+|575, 465   | 295, 0    |
 
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
-
-![alt text][image4]
+**NOTE**: it is important that the `x` position for the points that lie on
+the _bottom_ of the image are equally scaled/offset when transforming from
+`src` to `dst`, in order to preserve the information about where in the lane
+the vehicle is. Otherwise it could give a false impression that the vehicle is centered.
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
 Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
-![alt text][image5]
+![alt text][image7]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
@@ -165,7 +198,7 @@ I did this in lines # through # in my code in `my_other_file.py`
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
-![alt text][image6]
+![alt text][image8]
 
 ---
 
