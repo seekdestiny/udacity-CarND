@@ -28,6 +28,7 @@ The purpose of the project is to detect and track road lanes in a traffic video.
 [image1]: ./output_images/undistortion.png "Undistorted"
 [image2]: ./output_images/image_undistort.png "ImageUndistorted"
 [image3]: ./output_images/distort_diff.png "DistortDiff"
+[image4]: ./output_images/binary_example.png "Binary Example"
 
 [Rubric](https://review.udacity.com/#!/rubrics/571/view)
 ---
@@ -54,9 +55,71 @@ is displayed as well. The result is shown below.
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+A combined binary mask has been created in order to keep the pixels belonging to the lane lines, removing as much noise/irrelevant pixels as possible from the rest of the image. We have used masks based on color and gradients, which are described in the following subsections.
 
-![alt text][image3]
+##### color masks
+
+First, we create masks based on color. We know that the lane markings will
+usually be either white or yellow, so we create masks for those two colors.
+
+The first step is to convert the image to the `HLS` color space as follows:
+
+```python
+img_hls = cv2.cvtColor(img, cv2.COLOR_RGB2HLS)
+```
+
+The motivation is that the pure color information is more robustly contained in the `H` (hue)
+channel. Another option would have been to choose `HSV` color space. However
+we observed that it was trickier to properly isolate the white color.
+
+The color masks are implemented in color masks part. In particular, the yellow and
+white masks are obtained using the `cv2.inRange` function:
+
+```python
+def get_yellow_mask(img_hls):
+    yellow_lower = np.array([15,50,100])
+    yellow_upper = np.array([25,200,255])
+    return cv2.inRange(img_hls, yellow_lower, yellow_upper) // 255
+    
+def get_white_mask(img_hls):
+    white_lower = np.array([0,  200, 0])
+    white_upper = np.array([255,255, 255])
+    return cv2.inRange(img_hls, white_lower, white_upper) // 255
+```
+
+##### gradient masks
+
+To make it more robust, we also compute a mask based on gradients. In particular,
+we use the **Sobel operator** seen in the lectures, using the OpenCv function
+`cv2.Sobel`. We have experimented with gradients
+in X and Y directions independently, gradient magnitude and direction.
+The implementation appears in Gradient Masks part. The conclusions are:
+
+ - Sobel in X direction is extremelly useful since the lane lines are vertical.
+ Sobel Y can detect most of them as well, but returns extra undesireable gradients
+for example when having shadows across the road.
+
+ - Gradient magnitude combines sobel X and Y, therefore keeping the problems of
+ Sobel Y.
+
+ - Gradient direction is extremelly noisy and doesn't allow us to better
+ extract the lane lines.
+
+Therefore the chosen solution is to **only use the Sobel X mask**.
+
+##### final mask
+
+Finally, we combine the previous masks to get the best of both worlds using
+a **bitwise OR operation** (addition) of the yellow, white and gradient masks.
+This is implemented in Combined Mask part, using the function `cv2.bitwise_or`.
+
+The result is shown in `binary_example.png`:
+
+![alt text][image4]
+
+As been observed, the lanemarkings are clearly detected all the way
+forward to the horizon, and the shadows have been robustly filtered out. This
+will make the process of lane fitting much easier.
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
