@@ -31,8 +31,8 @@ The purpose of the project is to detect and track road lanes in a traffic video.
 [image4]: ./output_images/binary_example.png "Binary Example"
 [image5]: ./output_images/persp_transform_original.png "Warp Original Example"
 [image6]: ./output_images/persp_transform_warped.png "Warp Example"
-[image7]: ./output_images/before_line_search.jpg" "grayscale_line"
-[image8]: ./output_images/line_search_initial_point.jpg" "histogram"
+[image7]: ./output_images/before_line_search.jpg "grayscale_line"
+[image8]: ./output_images/line_search_initial_point.jpg "histogram"
 
 [Rubric](https://review.udacity.com/#!/rubrics/571/view)
 ---
