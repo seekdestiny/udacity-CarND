@@ -35,6 +35,8 @@ The purpose of the project is to detect and track road lanes in a traffic video.
 [image8]: ./output_images/line_search_initial_point.jpg "histogram"
 [image9]: ./output_images/sliding_window_search_left.jpg "sliding_left"
 [image10]: ./output_images/sliding_window_search_right.jpg "sliding_right"
+[image11]: ./output_images/line_fit_left.jpg "line_left"
+[image12]: ./output_images/line_fit_right.jpg "line_right"
 
 [Rubric](https://review.udacity.com/#!/rubrics/571/view)
 ---
@@ -301,7 +303,7 @@ of the pixels that it contains.
 Once we have the pixels for each line, we can perform **line fitting**, where
 we simply fit a second-order polynomial to the stored `x` and `y` datapoints.
 This is performed using the function `np.polyfit(y, x, 2)`, inside the function
-`fit` of the `Line` class (see `cell #15`).
+`fit` of the `Line` class (see `cell #17`).
 
 **NOTE**: we fit the polynomial using `y` as `x` and viceversa for a more stable
 result (since the lines are almost vertical) and since it will be useful later
@@ -310,14 +312,15 @@ on for drawing purposes.
 Finally, we plot the polynomial on top of the original image by just computing
 the corresponding `x` value for every `y` in the image. We use the function
 `cv2.line` to plot the lines, inside the function `draw_line`, implemented
-in `cell #21`.
+in `cell #23`.
 
 The result can be seen in pictures `line_fit_left.jpg` (left) and
 `line_fit_right.jpg`(right), with the polynomial overlaid in red. The shown
 pixels are the ones that have been picked by the sliding window search.
 
-<img src="./output_images/line_fit_left.jpg" height="200"/>
-<img src="./output_images/line_fit_right.jpg" height="200"/>
+![alt text][image11]
+
+![alt text][image12]
 
 **NOTE**: we perform fitting both in pixel coordinates and in meters, to
 obtain the coefficients `self.coeffs` and `self.coeffs_m`, inside the `Line`
