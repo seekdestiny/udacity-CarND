@@ -454,12 +454,42 @@ from left to right.
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./output_images/project_video.mp4)
 
 ---
 
 ### Discussion
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+The hardest part was selecting and tuning the different color and gradient masks
+in order to make a robust algorithm, for example removing shadows.
+This was mostly a trial-and-error process, that could be a bit frustrating.
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+I am very satisfied with the results on the test images and the project video,
+however the pipeline performs much worse in the challenge videos, for several reasons:
+
+ - The illumination conditions are slightly different and the color masks don't filter
+ all the shadows, or don't pick properly all the white and yellow lines.
+
+ - The road curvature is much smaller (sharper curves).
+
+ - The road was not flat in the harder challenge video. A non-null vehicle pitch
+  causes the perspective transform to not work as expected.
+
+In addition, I can think of many other scenarios where the pipeline can fail:
+
+ - Night conditions.
+ - Rain conditions.
+ - Crowded roads, with vehicle occlusions that don't allow to see the lanemarkings.
+ - Sunrise/sunset scenarios, which cast very large shadows.
+ - Lane changing situations. After all we assume that the vehicle is relatively
+ centered.
+ - Many others.
+ 
+The following **improvements** should be made to make it more robust:
+
+ - Use masks that do not rely on color, since it's too dependent on illumination conditions.
+ - Consider the vehicle pitch when computing perspective transform.
+ - Compute the exact position of the horizon in the image, to improve the birds-eye-view.
+ - More complex tracking models (e.g. Kalman Filter) for a smoother result.
+ - Smarter sanity checks.
