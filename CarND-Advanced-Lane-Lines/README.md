@@ -33,6 +33,8 @@ The purpose of the project is to detect and track road lanes in a traffic video.
 [image6]: ./output_images/persp_transform_warped.png "Warp Example"
 [image7]: ./output_images/before_line_search.jpg "grayscale_line"
 [image8]: ./output_images/line_search_initial_point.jpg "histogram"
+[image9]: ./output_images/sliding_window_search_left.jpg "sliding_left"
+[image10]: ./output_images/sliding_window_search_right.jpg "sliding_right"
 
 [Rubric](https://review.udacity.com/#!/rubrics/571/view)
 ---
@@ -268,27 +270,28 @@ upwards following the line, all the way up to the top of the image.
 
 The sliding window is moved as follows:
 
- - It moves the amount `size_y` in the vertical direction, where `size_y` is the
-size of the window.
+ - It moves the amount `height` in the vertical direction, where `height` is the
+y direction size of the window.
  - If the window contained pixels, it moves towards the mean `x` position of those
 pixes. Otherwise it moves the same amount as in the previous step, assuming
 that the line has the same curvature in the image.
 
-This functionality is implemented in the `SlidingWindow` helper class (see `cell #17`).
+This functionality is implemented in the `SlidingWindow` helper class (see `cell #19`).
 In addition, a `Line` class has been created to store the pixels extracted
 from the sliding window.
 
 The function that takes `img_warped`, the starting search position `x0` and
 extracts the pixels corresponding to the line is called `get_line_pixels`,
-implemented in `cell #20`.
+implemented in `cell #22`.
 
 An example is shown for both the left and right images, respectively, in
-`sliding_window_search_left.jpg` and `sliding_window_search_right.jpg`. The red
+`sliding_window_search_left.jpg` and `sliding_window_search_right.jpg`. The green
 squares represent the different positions of the sliding windows while searching
 for the line pixels.
 
-<img src="./output_images/sliding_window_search_left.jpg" height="200"/>
-<img src="./output_images/sliding_window_search_right.jpg" height="200"/>
+![alt text][image9]
+
+![alt text][image10]
 
 The final result is that each line contains a list of the `x` and `y` coordinates
 of the pixels that it contains.
