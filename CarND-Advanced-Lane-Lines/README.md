@@ -341,7 +341,65 @@ the second ones will be useful for computing the road curvature and vehicle posi
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+##### Road curvature estimation
+
+To estimate the road curvature, we have used the formula provided in the lectures, implemented as follows in Python, inside the `Line` class (`cell #17`), function `curvature`:
+
+```python
+def curvature(self, y_pos_pixels):
+    y = y_pos_pixels * self.ym_per_pix
+    
+    dx_dy   = 2. * self.coeffs_m[0] * y + self.coeffs_m[1]
+    d2x_dy2 = 2. * self.coeffs_m[0]
+    
+    curvature = ((1. + (dx_dy)**2)**1.5) / np.absolute(d2x_dy2)
+    return curvature
+```
+
+We compute the curvature at the position `y_pos_pixels = img.shape[0]`, in other
+words the bottom of the image, which is where the vehicle is. In addition,
+we must not forget to use `self.coeffs_m`, which contains the coefficients
+after fitting X-Y points in meters, instead of pixels, obtained through
+the conversion factors mentioned before.
+
+
+Finally, we compute the final curvature as the average of the left and right
+curvatures, in the function `compute_curvature`, (`cell #37`):
+
+```
+def compute_curvature(lane, img_shape):
+    y_curvature = img_shape[0]
+    return 0.5 * (lane.line_l.curvature(y_curvature) + lane.line_r.curvature(y_curvature))
+```
+
+#### Vehicle position estimation
+The vehicle offset with respect to the lane is computed by calculating
+the position (in meters) of the left and line lanes at the bottom of the image, relative
+to the center of the image.
+
+This is implemented in the function `get_x_position` inside the `Line` class (`cell #17`),
+simply evaluating the second order polynomial at the desired `y` position. 
+
+```python
+def get_x_position(self, y_pixels, img_width):
+    x_pixels = self.coeffs[0]*(y_pixels**2) + self.coeffs[1]*y_pixels + self.coeffs[2] \
+               - float(img_width)/2
+    return self.xm_per_pix * x_pixels   
+```
+It should be noted that we substract `img_width/2` in order to make the result relative
+to the center of the image. **NOTE**: this assumption means that the camera is perfectly centered in the vehicle.
+
+Finally, we convert to meters using the `self.xm_per_pix` factor. The final
+vehicle position is the average of the positions for the left and right lines,
+as shown in the function `compute_vehicle_position` (`cell #38`):
+
+```python
+def compute_vehicle_position(lane, img_shape):
+    return 0.5 * (lane.line_r.get_x_position(img_shape[0], img_shape[1]) + \
+                  lane.line_l.get_x_position(img_shape[0], img_shape[1]))
+```
+If the result is positive, it means that the lines appear more to the right
+of the image, which means that the vehicle is offset to the left of the center lane.
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
