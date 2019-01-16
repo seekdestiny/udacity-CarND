@@ -31,12 +31,14 @@ The purpose of the project is to detect and track road lanes in a traffic video.
 [image4]: ./output_images/binary_example.png "Binary Example"
 [image5]: ./output_images/persp_transform_original.png "Warp Original Example"
 [image6]: ./output_images/persp_transform_warped.png "Warp Example"
+[image7]: ./output_images/before_line_search.jpg" "grayscale_line"
+[image8]: ./output_images/line_search_initial_point.jpg" "histogram"
 
 [Rubric](https://review.udacity.com/#!/rubrics/571/view)
 ---
 ### Camera Calibration
 
-The code for this step is contained in camera calibration and imaage undistortion part of the IPython notebook located in "advanced-lane-lines.ipynb".  
+The code for this step is contained in **camera calibration** and **image undistortion** part of the IPython notebook located in "advanced-lane-lines.ipynb".  
 
 I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `obj_pts_i` is just a replicated array of coordinates, and `obj_pts` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `img_pts` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
@@ -48,7 +50,7 @@ I then used the output `obj_pts` and `img_pts` to compute the camera calibration
 
 #### 1. Provide an example of a distortion-corrected image.
 
-We apply the distortion correction to a test image, for example `test6.jpg`, again using the cv2.undistort function. This is in image undistortion part. The difference between original and undistorted image
+We apply the distortion correction to a test image, for example `test6.jpg`, again using the cv2.undistort function. This is in **image undistortion** part. The difference between original and undistorted image
 is displayed as well. The result is shown below.
 
 ![alt text][image2]
@@ -74,7 +76,7 @@ The motivation is that the pure color information is more robustly contained in 
 channel. Another option would have been to choose `HSV` color space. However
 we observed that it was trickier to properly isolate the white color.
 
-The color masks are implemented in color masks part. In particular, the yellow and
+The color masks are implemented in **color masks** part. In particular, the yellow and
 white masks are obtained using the `cv2.inRange` function:
 
 ```python
@@ -95,7 +97,7 @@ To make it more robust, we also compute a mask based on gradients. In particular
 we use the **Sobel operator** seen in the lectures, using the OpenCv function
 `cv2.Sobel`. We have experimented with gradients
 in X and Y directions independently, gradient magnitude and direction.
-The implementation appears in Gradient Masks part. The conclusions are:
+The implementation appears in **Gradient Masks** part. The conclusions are:
 
  - Sobel in X direction is extremelly useful since the lane lines are vertical.
  Sobel Y can detect most of them as well, but returns extra undesireable gradients
@@ -113,7 +115,7 @@ Therefore the chosen solution is to **only use the Sobel X mask**.
 
 Finally, we combine the previous masks to get the best of both worlds using
 a **bitwise OR operation** (addition) of the yellow, white and gradient masks.
-This is implemented in Combined Mask part, using the function `cv2.bitwise_or`.
+This is implemented in **Combined Mask** part, using the function `cv2.bitwise_or`.
 
 The result is shown in `binary_example.png`:
 
@@ -131,7 +133,7 @@ a **birds-eye view** of the image, which allows us to obtain real measurements,
 not affected by the perspective of the camera.
 
 This operation is called **perspective transformation**, and it is implemented
-in Perspective Transform part. We use the OpenCV functions
+in **Perspective Transform** part. We use the OpenCV functions
 `cv2.getPerspectiveTransform` and `cv2.warpPerspective` to this extent.
 
 First, we need to manually select 4 points in the source image. These points must
@@ -186,9 +188,150 @@ the vehicle is. Otherwise it could give a false impression that the vehicle is c
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+The process has been implemented in the following steps. The starting point
+is the image obtained after applying the binary mask and the perspective
+transform, discussed in previous sections. We will refer to this image as
+`img_warped`:
+
+1. Search for the pixels belonging to the line.
+2. Fit a second-order polynomial to each set of pixels.
+
+We explain these 2 steps in the following sections.
+
+#### Line search
+
+When we receive the first video frame, we have no information about the lane
+lines in the image. Therefore we must perform a search without prior assumptions.
+We will work with the birds-eye view image (`img_warped`), passed through the
+`combined_mask()` function, as explained before.
+
+The implemented approach is as follows:
+
+1. Discover the starting point of the line, in the bottom of the image.
+2. Follow the line all the way up to the top of the image, using a sliding
+window technique.
+
+The code that implements and verifies this part of the pipeline can be
+observed from **Lane Fitting** part.
+
+#### Starting point
+
+To search for the starting point of the lines, we compute the **histogram**
+over the number of pixels for each `x` position in the image. To simplify
+the computations and make it more robust, we only perform this operation
+in the **bottom half of the image**. This is implemented in **Lane Pixels Detecting**:
+
+```python
+def get_starting_x(img, visualize=False):
+    # Compute histogram
+    histogram = np.sum(img[int(img.shape[0]/2):,:], axis=0)
+    
+    if visualize:
+        plt.plot(histogram);
+        plt.autoscale(enable=True, axis='x', tight=True);
+        plt.savefig('./output_images/line_search_initial_point.jpg')
+        
+    # Get left and right peaks. Assuming that left and right
+    # lines will be on the left or right half of the image
+    x_half = int(len(histogram)/2)
+    x0_left  = np.argmax(histogram[0:x_half])
+    x0_right = x_half + np.argmax(histogram[x_half:])
+    
+    return x0_left, x0_right
+```
+
+
+The image `img_warped` that we start with is shown in the figure
+`before_line_search.jpg`:
 
 ![alt text][image7]
+
+The histogram over non-zero pixels values is shown in
+`line_search_initial_point.jpg`:
+
+![alt text][image8]
+
+The result is the starting position of each line along the `x` direction, in pixels:
+
+```
+Left line at x = 339, right line at x = 1044
+```
+
+It can clearly be seen that there are 2 main peaks, which correspond to the starting
+position of the lines.
+
+#### Sliding window search
+
+We now know where to start searching. The next step is to place a box around
+this starting point, extract the non-zero pixels inside it, and then move it
+upwards following the line, all the way up to the top of the image.
+
+The sliding window is moved as follows:
+
+ - It moves the amount `size_y` in the vertical direction, where `size_y` is the
+size of the window.
+ - If the window contained pixels, it moves towards the mean `x` position of those
+pixes. Otherwise it moves the same amount as in the previous step, assuming
+that the line has the same curvature in the image.
+
+This functionality is implemented in the `SlidingWindow` helper class (see `cell #17`).
+In addition, a `Line` class has been created to store the pixels extracted
+from the sliding window.
+
+The function that takes `img_warped`, the starting search position `x0` and
+extracts the pixels corresponding to the line is called `get_line_pixels`,
+implemented in `cell #20`.
+
+An example is shown for both the left and right images, respectively, in
+`sliding_window_search_left.jpg` and `sliding_window_search_right.jpg`. The red
+squares represent the different positions of the sliding windows while searching
+for the line pixels.
+
+<img src="./output_images/sliding_window_search_left.jpg" height="200"/>
+<img src="./output_images/sliding_window_search_right.jpg" height="200"/>
+
+The final result is that each line contains a list of the `x` and `y` coordinates
+of the pixels that it contains.
+
+#### Line fitting
+
+Once we have the pixels for each line, we can perform **line fitting**, where
+we simply fit a second-order polynomial to the stored `x` and `y` datapoints.
+This is performed using the function `np.polyfit(y, x, 2)`, inside the function
+`fit` of the `Line` class (see `cell #15`).
+
+**NOTE**: we fit the polynomial using `y` as `x` and viceversa for a more stable
+result (since the lines are almost vertical) and since it will be useful later
+on for drawing purposes.
+
+Finally, we plot the polynomial on top of the original image by just computing
+the corresponding `x` value for every `y` in the image. We use the function
+`cv2.line` to plot the lines, inside the function `draw_line`, implemented
+in `cell #21`.
+
+The result can be seen in pictures `line_fit_left.jpg` (left) and
+`line_fit_right.jpg`(right), with the polynomial overlaid in red. The shown
+pixels are the ones that have been picked by the sliding window search.
+
+<img src="./output_images/line_fit_left.jpg" height="200"/>
+<img src="./output_images/line_fit_right.jpg" height="200"/>
+
+**NOTE**: we perform fitting both in pixel coordinates and in meters, to
+obtain the coefficients `self.coeffs` and `self.coeffs_m`, inside the `Line`
+class, respectively. For this, we need a conversion factor between pixels and meters,
+which is also part of the `Line` class:
+
+```python
+self.ym_per_pix = 30/720  # meters per pixel in y dimension
+self.xm_per_pix = 3.7/700 # meteres per pixel in x dimension
+```
+
+These are estimates taken from the Udacity class, assuming that the birds-eye
+view image has 720 pixels in the vertical direction covering 30 meters of road,
+and 700 pixels covering the lane width (around 3.7 meters).
+
+ The first ones are useful for drawing on the image;
+the second ones will be useful for computing the road curvature and vehicle position.
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
