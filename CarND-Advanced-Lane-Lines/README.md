@@ -37,6 +37,9 @@ The purpose of the project is to detect and track road lanes in a traffic video.
 [image10]: ./output_images/sliding_window_search_right.jpg "sliding_right"
 [image11]: ./output_images/line_fit_left.jpg "line_left"
 [image12]: ./output_images/line_fit_right.jpg "line_right"
+[image13]: ./output_images/free_space.jpg "free_space"
+[image14]: ./output_images/main_visualization.jpg "main_visualization"
+[image15]: ./output_images/test6.jpg "test6"
 
 [Rubric](https://review.udacity.com/#!/rubrics/571/view)
 ---
@@ -403,9 +406,47 @@ of the image, which means that the vehicle is offset to the left of the center l
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+The final visualization of the detected lanes is implemented in the `generate_output_img` function (`cell #36`)
 
-![alt text][image8]
+The steps are:
+
+1. Draw the left and right lanes on an empty image, using the function `draw_line`,
+based on `cv2.line` (see `cell #23`).
+
+2. Draw the empty space on a separate image, using the function `draw_free_space`,
+based on `cv2.fillPoly`, following the example from the lectures (see `cell #28`).
+An example is shown in `free_space.jpg`:
+
+![alt text][image13]
+
+3. Unwarp the previous two images back to the original perspective. This is
+implemented using the `cv2.warpPerspective` function, using the `Minv` transformation
+matrix instead of `M` (used to get the birds-eye view).
+
+4. Blend the previous unwarped images with the original one, using the
+function `cv2.addWeighted`. A value of `alpha = 0.3 or 0.7` has been used to make
+the lines and free space area translucid.
+
+5. Display the road curvature and vehicle position using the `cv2.putText` function.
+
+An example result is shown in `main_visualization.jpg`, applied to `test_images/test6.jpg`
+(note: dummy road curvature and vehicle position, just for visualization purposes):
+
+![alt text][image14]
+
+In addition, a debug visualizer has been created that includes the previous
+image as well as the relevant intermediate images in the pipeline. It is implemented
+in the function `create_debug_img` (`cell #65`).
+
+This is accomplished by simply creating a bigger image and copying the contents of the smaller
+images inside. And example is shown in `test6.jpg`:
+
+![alt text][image15]
+
+The main window is the result of the pipeline. On the top-right corner, the color
+and gradient masks are shown. On the bottom, we show the warped image, the final
+masked image, the selected pixels for line fitting, and the fitted lines (in red/blue),
+from left to right.
 
 ---
 
