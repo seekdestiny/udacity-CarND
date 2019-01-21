@@ -16,10 +16,10 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./out_images/dataset_visualization.jpg "Data Visualization"
-[image1a]: ./out_images/train_set_bar.jpg "Train Bar Visualization"
-[image1b]: ./out_images/test_set_bar.jpg "Test Bar Visualization"
-[image1c]: ./out_images/valid_set_bar.jpg "Valid Bar Visualization"
+[image1]: ./out_images/dataset_visualization.png "Data Visualization"
+[image1a]: ./out_images/train_set_bar.png "Train Bar Visualization"
+[image1b]: ./out_images/test_set_bar.png "Test Bar Visualization"
+[image1c]: ./out_images/valid_set_bar.png "Valid Bar Visualization"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
