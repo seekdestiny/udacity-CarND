@@ -177,7 +177,7 @@ The first image might be difficult to classify because it is white inside the cy
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
-The code for making predictions on my final model is located in the last cell of the iPython notebook.
+The code for making predictions on my final model is located in `cell #54,#49` of the iPython notebook.
 
 Here are the results of the prediction:
 ![alt text][image5]
