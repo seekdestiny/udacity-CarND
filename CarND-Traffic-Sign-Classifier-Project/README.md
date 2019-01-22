@@ -20,6 +20,8 @@ The goals / steps of this project are the following:
 [image1a]: ./out_images/train_set_bar.png "Train Bar Visualization"
 [image1b]: ./out_images/test_set_bar.png "Test Bar Visualization"
 [image1c]: ./out_images/valid_set_bar.png "Valid Bar Visualization"
+[image2]: ./out_images/grayscale.png "Grayscale Visualization"
+[image2a]: ./out_images/normalized_vs_orignal.png "Normalized Visualization"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -73,18 +75,20 @@ After this point I also detail the dataset structure by plotting the occurrence 
 
 #### 1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
 
-The code for this step is contained in the fifth, sixth, seventh, eighth, ninth, and tenth code cell of the IPython notebook.
+The code for this step is contained in `cell #30-39` of the IPython notebook.
 
-At first I tried to convert it to YUV as that was what the technical paper described that was authored by Pierre Sermanet and Yann LeCun.  I had difficulty getting this working at so I skipped over this in order to meet my time requirements.
-
-The next step, I decided to convert the images to grayscale because in the technical paper it outlined several steps they used to achieve 99.7%.  I assume this works better because the excess information only adds extra confusion into the learning process.  After the grayscale I also normalized the image data because I've read it helps in speed of training and performance because of things like resources.  Also added additional images to the datasets through randomized modifications.
-
-Here is an example of a traffic sign images that were randomly selected.  
+I convert the images to grayscale because extra color channel adds redundant info for model to fit.
+The grayscale pics are shown below.
 
 ![alt text][image2]
 
-Here is a look at the normalized images. Which should look identical, but for some small random alterations such as opencv affine and rotation.  
+After the graysscale I also normalized the image data because it speeds up gradient descent to achieve optimal solution.
+The normalized pic compared to original one is shown. (only one example is picked)
+
 ![alt text][image2a]
+
+I only want to try random_scale, random_brightness, random_warp and so on. Due to limited deadline, I will come back
+later to implement it in the future.
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
