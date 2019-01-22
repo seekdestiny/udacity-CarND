@@ -25,6 +25,8 @@ The goals / steps of this project are the following:
 [image3]: ./out_images/train_acc.png "Train Accuracy Visualization"
 [image3a]: ./out_images/valid_acc.png "Validation Accuracy Visualization"
 [image4]: ./out_images/new_signs.png " New Signs"
+[image5]: ./out_images/new_image_prediction.png " New Signs Prediction"
+[image6]: ./out_images/new_sign_bar.png " New Signs Bar"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -46,7 +48,7 @@ You're reading it! and here is a link to my [project code](https://github.com/se
 
 #### 1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
 
-The code for this step is contained in `cell #39` of the IPython notebook.  
+The code for this step is contained in `cell #2 - 3` of the IPython notebook.  
 
 I used the numpy library to calculate summary statistics of the traffic
 signs data set:
@@ -58,13 +60,13 @@ signs data set:
 
 #### 2. Include an exploratory visualization of the dataset.
 
-The code for this step is contained in `cell #42-43` of the IPython notebook.  
+The code for this step is contained in `cell #4 - 6` of the IPython notebook.  
 
 Here is an exploratory visualization of the data set.  It pulls in all 43 images and labels them with the correct names in reference with the csv file to their respective id's.
 
 ![alt text][image1]
 
-The code for this step is contained in `cell #44` of the IPython notebook.
+The code for this step is contained in `cell #7` of the IPython notebook.
 
 After this point I also detail the dataset structure by plotting the occurrence of each image class to get an idea of how the data is distributed.  This can help understand where potential pitfalls could occur if the dataset isn't uniform in terms of a baseline occurrence.
 
@@ -78,7 +80,7 @@ After this point I also detail the dataset structure by plotting the occurrence 
 
 #### 1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
 
-The code for this step is contained in `cell #30-39` of the IPython notebook.
+The code for this step is contained in `cell #8 - 13` of the IPython notebook.
 
 I convert the images to grayscale because extra color channel adds redundant info for model to fit.
 The grayscale pics are shown below.
@@ -95,7 +97,7 @@ later to implement it in the future.
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
-The code for my final model is located in `cell #13` of the iPython notebook.
+The code for my final model is located in `cell #37` of the iPython notebook.
 
 My final model consisted of the following layers:
 
@@ -137,16 +139,16 @@ dropout keep probability: 0.5
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
-The code for calculating the accuracy of the model is located in `cell# 25` cell of the Ipython notebook.
+The code for calculating the accuracy of the model is located in `cell# 41 - 43` cell of the Ipython notebook.
 
 ![alt text][image3]
 
 ![alt text][image3a]
 
 My final model results were:
-* training set accuracy of 100.0%
-* validation set accuracy of 94.8%
-* test set accuracy of 93.7%
+* training set accuracy of 99.9%
+* validation set accuracy of 95.4%
+* test set accuracy of 93.8%
 
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
@@ -178,18 +180,16 @@ The first image might be difficult to classify because it is white inside the cy
 The code for making predictions on my final model is located in the last cell of the iPython notebook.
 
 Here are the results of the prediction:
-![alt text][image10a]
-![alt text][image10b]
-![alt text][image10c]
-![alt text][image10d]
-![alt text][image10e]
-![alt text][image10f]
+![alt text][image5]
 
-The model was able to correctly guess 5 of the 5 traffic signs, which gives an accuracy of 100%. This compares favorably to the accuracy on the test set although I did throw it a softball.
+The model was able to correctly guess 6 of the 6 traffic signs, which gives an accuracy of 100%. This compares favorably to the accuracy on the test set.
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
 The answer to this question is above.
+
+The softmax probailities bar char is shown here. As we see, only image 15 has second guess (33%).
+![alt text][image6]
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 #### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
