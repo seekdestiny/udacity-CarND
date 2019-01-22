@@ -22,6 +22,8 @@ The goals / steps of this project are the following:
 [image1c]: ./out_images/valid_set_bar.png "Valid Bar Visualization"
 [image2]: ./out_images/grayscale.png "Grayscale Visualization"
 [image2a]: ./out_images/normalized_vs_orignal.png "Normalized Visualization"
+[image3]: ./out_images/train_acc.png "Train Accuracy Visualization"
+[image3a]: ./out_images/valid_acc.png "Validation Accuracy Visualization"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -121,15 +123,20 @@ This can let network adjust between size hyperparameters to improve overfitting.
 I used the Adam optimizer (already implemented in the LeNet lab). The final settings used were:
 
 batch size: 128
+
 epochs: 20
+
 learning rate: 0.001
+
 mu: 0
+
 sigma: 0.1
+
 dropout keep probability: 0.5
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
-The code for calculating the accuracy of the model is located in the 16th and 17th cell of the Ipython notebook.
+The code for calculating the accuracy of the model is located in `cell# 25` cell of the Ipython notebook.
 
 ![alt text][image3]
 
@@ -137,19 +144,23 @@ The code for calculating the accuracy of the model is located in the 16th and 17
 
 My final model results were:
 * training set accuracy of 100.0%
-* validation set accuracy of 99.3%
-* test set accuracy of 94.2%
+* validation set accuracy of 94.8%
+* test set accuracy of 93.7%
 
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
-  *  I used a very similar architecture to the paper offered by the instructors.  I used it because they got such a good score the answer was given through it.
+  *  I used LeNet-5 architecture used in the previous lab. I used it because it is a easy starting point and it got a good
+train and valid accuracy already.
 * What were some problems with the initial architecture?
-  *  The first issue was lack of data for some images and the last was lack of knowledge of all the parameters.  After I fixed those issues the LeNet model given worked pretty well with the defaults.  I still couldn't break 98% very easily until I added another convolution.  After that it was much faster at reaching higher accuracy scores.
+  *  It has some overfitting issue because validation accuracy is much lower than train accuracy.
 * How was the architecture adjusted and why was it adjusted?
-  * Past what was said in the previous question, I didn't alter much past adding a couple dropouts with a 50% probability.
+  *  As mentioned previously, I used the architecture provided in Sermanet/LeCun paper because a feedforward
+manner through two stage of convolutions and subsampling can improve overfitting. And dropout technique is also 
+accquired.
 * Which parameters were tuned? How were they adjusted and why?
-  * Epoch, learning rate, batch size, and drop out probability were all parameters tuned along with the number of random modifications to generate more image data was tuned.  For Epoch the main reason I tuned this was after I started to get better accuracy early on I lowered the number once I had confidence I could reach my accuracy goals.  The batch size I increased only slightly since starting once I increased the dataset size.  The learning rate I think could of been left at .001 which is as I am told a normal starting point, but I just wanted to try something different so .00097 was used.  I think it mattered little.  The dropout probability mattered a lot early on, but after awhile I set it to 50% and just left it.  The biggest thing that effected my accuracy was the data images generated with random modifications.  This would turn my accuracy from 1-10 epochs from 40% to 60% max to 70% to 90% within the first few evaluations. Increasing the dataset in the correct places really improved the max accuracy as well.
-* What are some of the important design choices and why were they chosen? I think I could go over this project for another week and keep on learning.  I think this is a good question and I could still learn more about that.  I think the most important thing I learned was having a more uniform dataset along with enough convolutions to capture features will greatly improve speed of training and accuracy.
+  * Epoch, learning rate, batch size, and drop out probability were all parameters tuned. For Epoch the main reason I tuned this was after I started to get better accuracy early on I lowered the number once I had confidence I could reach my accuracy goals.  The batch size I increased only slightly since starting once I increased the dataset size.  The learning rate I think could of been left at .001 which is as I am told a normal starting point, but I just wanted to try something different so .00097 was used.  I think it mattered little.  The dropout probability mattered a lot early on, but after awhile I set it to 50% and just left it.
+* What are some of the important design choices and why were they chosen? 
+  * I think I could go over this project for another week and keep on learning.  I think this is a good question and I could still learn more about that.  I think the most important thing I learned was having a more uniform dataset along with enough convolutions to capture features will greatly improve speed of training and accuracy.
 
 ### Test a Model on New Images
 
