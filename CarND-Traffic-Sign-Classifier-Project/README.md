@@ -24,6 +24,7 @@ The goals / steps of this project are the following:
 [image2a]: ./out_images/normalized_vs_orignal.png "Normalized Visualization"
 [image3]: ./out_images/train_acc.png "Train Accuracy Visualization"
 [image3a]: ./out_images/valid_acc.png "Validation Accuracy Visualization"
+[image4]: ./out_images/new_signs.png " New Signs"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -166,11 +167,11 @@ accquired.
 
 #### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
-Here are five German traffic signs that I found on the web:
+Here are six German traffic signs that I found on the web:
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] ![alt text][image7] ![alt text][image8] ![alt text][image9]
+![alt text][image4]
 
-I used semi-easy images to classify and even modified them slightly.  I made them all uniform in size and only had one partially cut off.
+The first image might be difficult to classify because it is white inside the cycle without any special shapes or words.
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
