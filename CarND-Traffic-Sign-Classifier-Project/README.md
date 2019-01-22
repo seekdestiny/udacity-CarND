@@ -92,28 +92,25 @@ later to implement it in the future.
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
-The code for my final model is located in the eleventh cell of the iPython notebook.
+The code for my final model is located in `cell #13` of the iPython notebook.
 
 My final model consisted of the following layers:
 
 | Layer         		|     Description	        					|
 |:---------------------:|:---------------------------------------------:|
 | Input         		| 32x32x1 grayscale image   							|
-| Convolution 5x5     	| 2x2 stride, valid padding, outputs 28x28x6 	|
+| Convolution 5x5     	| 1x1 stride, valid padding, outputs 28x28x6 	|
 | RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 14x14x6 				|
-| Convolution 5x5	    | 2x2 stride, valid padding, outputs 10x10x16    |
+| Max pooling	      	| 2x2 stride, inputs 28x28x6, outputs 14x14x6 				|
+| Convolution 5x5	    | 1x1 stride, valid padding, inputs 14x14x6, outputs 10x10x16    |
 | RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 5x5x16 				|
-| Convolution 1x1	    | 2x2 stride, valid padding, outputs 1x1x412    |
+| Max pooling	      	| 2x2 stride,  inputs 10x10x16, outputs 5x5x16 				|
+| Convolution 5x5	    | 1x1 stride, valid padding, inputs 5x5x16, outputs 1x1x400    |
 | RELU					|												|
-| Fully connected		| input 412, output 122        									|
-| RELU					|												|
+| Flatten Layers		| conv2(5x5x16)->400 and conv3(1x1x400)->400  		|
+| Concatenate		    | concat two 400 layers to one single 800 layer			|
 | Dropout				| 50% keep        									|
-| Fully connected		| input 122, output 84        									|
-| RELU					|												|
-| Dropout				| 50% keep        									|
-| Fully connected		| input 84, output 43        									|
+| Fully connected		| input 800, output 43        									|
 
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
