@@ -1,3 +1,6 @@
 [submodule "CarND-Behavioral-Cloning-P3"]
 	path = CarND-Behavioral-Cloning-P3
 	url = https://github.com/seekdestiny/CarND-Behavioral-Cloning-P3.git
+[submodule "CarND-Extended-Kalman-Filter-Project"]
+	path = CarND-Extended-Kalman-Filter-Project
+	url = https://github.com/seekdestiny/CarND-Extended-Kalman-Filter-Project.git
