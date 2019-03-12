@@ -4,3 +4,6 @@
 [submodule "CarND-Extended-Kalman-Filter-Project"]
 	path = CarND-Extended-Kalman-Filter-Project
 	url = https://github.com/seekdestiny/CarND-Extended-Kalman-Filter-Project.git
+[submodule "CarND-Kidnapped-Vehicle-Project"]
+	path = CarND-Kidnapped-Vehicle-Project
+	url = https://github.com/seekdestiny/CarND-Kidnapped-Vehicle-Project.git
