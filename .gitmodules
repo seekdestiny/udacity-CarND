@@ -7,3 +7,6 @@
 [submodule "CarND-Kidnapped-Vehicle-Project"]
 	path = CarND-Kidnapped-Vehicle-Project
 	url = https://github.com/seekdestiny/CarND-Kidnapped-Vehicle-Project.git
+[submodule "CarND-Path-Planning-Project"]
+	path = CarND-Path-Planning-Project
+	url = https://github.com/seekdestiny/CarND-Path-Planning-Project.git
