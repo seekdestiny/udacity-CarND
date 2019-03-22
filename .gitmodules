@@ -10,3 +10,6 @@
 [submodule "CarND-Path-Planning-Project"]
 	path = CarND-Path-Planning-Project
 	url = https://github.com/seekdestiny/CarND-Path-Planning-Project.git
+[submodule "CarND-PID-Control-Project"]
+	path = CarND-PID-Control-Project
+	url = https://github.com/seekdestiny/CarND-PID-Control-Project.git
